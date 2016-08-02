@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 # stock_master.py
 # findb 데이터베이스, stock_master 테이블

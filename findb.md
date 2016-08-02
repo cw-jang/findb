@@ -1,5 +1,9 @@
 # 개인용 파이낸스 DB (MySQL+crontab)
 
+<img width="50%" src="http://goo.gl/cu8lzz">
+#### 2016 fb.com/plusjune
+
+
 개인용 파이낸스 DB구축 데이터 입니다. 다음과 같은 table로 구성되어 있습니다.
 
 * stock_master : 전종목 코드와 이름
@@ -74,6 +78,3 @@ mysql> select count(*) from stock_price;
 # 전자공시(dart), 매일 06시~18시 15분 마다
 15 6-18 * * * /home/ubuntu/workspace/findb/stock_dart.py
 ```
-
-
-

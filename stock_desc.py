@@ -12,9 +12,12 @@ import requests
 import mysql.connector
 from sqlalchemy import create_engine
 
+import localsetting as ls
+
 
 # pwd=input('Enter Password for server:')
-pwd = 'cansentme'
+# pwd = 'cansentme'
+pwd = ls.PASSWORD
 
 
 # sector, wics, name_en

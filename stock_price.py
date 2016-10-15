@@ -10,8 +10,11 @@ import requests
 import mysql.connector
 from sqlalchemy import create_engine
 
+import localsetting as ls
+
 # pwd=input('Enter Password for server:')
-pwd = 'cansentme'
+# pwd = 'cansentme'
+pwd = ls.PASSWORD
 
 
 def get_last_page_num(code):
@@ -84,25 +87,28 @@ if __name__ == "__main__":
     
     df_master = pd.read_sql("SELECT * FROM stock_master", engine)
     for inx, row in df_master.iterrows():
-        print(row['code'], row['name'])
-        #  start: DB에 저장된 마지막 날짜 + 1일
-        df_max = pd.read_sql('select max(date) as maxdate from stock_price where code="%s"' % row['code'], engine)
-        
-        last_date = datetime(1900,1,1)
-        if df_max['maxdate'].iloc[0] != None:
-            last_date = datetime.strptime(str(df_max['maxdate'].iloc[0]), "%Y-%m-%d %H:%M:%S")
-        start = last_date + timedelta(1)
+        try:
+            print(row['code'], row['name'])
+            #  start: DB에 저장된 마지막 날짜 + 1일
+            df_max = pd.read_sql('select max(date) as maxdate from stock_price where code="%s"' % row['code'], engine)
+            
+            last_date = datetime(1900,1,1)
+            if df_max['maxdate'].iloc[0] != None:
+                last_date = datetime.strptime(str(df_max['maxdate'].iloc[0]), "%Y-%m-%d %H:%M:%S")
+            start = last_date + timedelta(1)
 
-        # end: 전일
-        yday = datetime.today() - timedelta(1)
-        end = datetime(yday.year, yday.month, yday.day)
+            # end: 전일
+            yday = datetime.today() - timedelta(1)
+            end = datetime(yday.year, yday.month, yday.day)
 
-        df_price = get_data_naver(row['code'], start, end)
-        df_price['code'] = row['code']
-        for ix, r in df_price.iterrows():
-            values = (r['date'].strftime('%Y-%m-%d %H:%M:%S'), r['code'], r['close'], r['change'], r['open'], r['high'], r['low'], r['volume'])
-            engine.execute(insert_sql, values)
-            print(r['code'], r['date'], r['close'])
+            df_price = get_data_naver(row['code'], start, end)
+            df_price['code'] = row['code']
+            for ix, r in df_price.iterrows():
+                values = (r['date'].strftime('%Y-%m-%d %H:%M:%S'), r['code'], r['close'], r['change'], r['open'], r['high'], r['low'], r['volume'])
+                engine.execute(insert_sql, values)
+                print(r['code'], r['date'], r['close'])
 
+        except Exception as e:
+            print('>> Exception: ', e.args[0])
 
-    
+    print('>> FINISHED')

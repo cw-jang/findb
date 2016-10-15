@@ -10,8 +10,11 @@ import pandas as pd
 import mysql.connector
 from sqlalchemy import create_engine
 
+import localsetting as ls
+
 # pwd=input('Enter Password for server:')
-pwd = 'cansentme'
+# pwd = 'cansentme'
+pwd = ls.PASSWORD
 
 
 def get_krx_stock_master():

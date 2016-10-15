@@ -13,8 +13,11 @@ import os.path
 import mysql.connector
 from sqlalchemy import create_engine
 
+import localsetting as ls
+
 # pwd=input('Enter Password for server:')
-pwd = 'cansentme'
+# pwd = 'cansentme'
+pwd = ls.PASSWORD
 
 def mkdir_sure(filename):
     folder=os.path.dirname(filename)

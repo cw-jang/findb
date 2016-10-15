@@ -12,8 +12,12 @@ import requests
 import mysql.connector
 from sqlalchemy import create_engine
 
+import localsetting as ls
+
 # pwd=input('Enter Password for server:')
-pwd = 'cansentme'
+# pwd = 'cansentme'
+pwd = ls.PASSWORD
+
 
 def get_finstate_naver(code, fin_type='4', freq_type='Y'):
     '''

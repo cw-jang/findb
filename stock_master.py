@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#!/usr/bin/python3
 
 # stock_master.py
 # findb 데이터베이스, stock_master 테이블
@@ -15,6 +14,7 @@ import localsetting as ls
 # pwd=input('Enter Password for server:')
 # pwd = 'cansentme'
 pwd = ls.PASSWORD
+host = ls.HOST
 
 
 def get_krx_stock_master():
@@ -62,11 +62,11 @@ create_table_sql = """
 """
 
 insert_sql = """
-    insert into stock_master (code, name, sector_code, sector) values (%s,%s,%s,%s)
+    replace into stock_master (code, name, sector_code, sector) values (%s,%s,%s,%s)
 """
     
 if __name__ == "__main__":
-    cnx_str = 'mysql+mysqlconnector://admin:'+pwd+'@localhost/findb'
+    cnx_str = 'mysql+mysqlconnector://admin:'+pwd+'@'+host+'/findb'
     engine = create_engine(cnx_str, echo=False)
 
     # create table if not exists
@@ -76,4 +76,4 @@ if __name__ == "__main__":
     df = get_krx_stock_master()
     df_master = df[['code', 'name', 'sector_code', 'sector']]
     for ix, r in df_master.iterrows():
-        engine.execute(insert_sql, (r['code'], r['name'], r['sector_code'], r['sector']))
+        engine.execute(insert_sql, (r['code'], r['name'], r['sector_code'] ))

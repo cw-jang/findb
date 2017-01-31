@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#!/usr/bin/python3
 
 # stock_dart.py
 
@@ -18,6 +17,7 @@ import localsetting as ls
 # pwd=input('Enter Password for server:')
 # pwd = 'cansentme'
 pwd = ls.PASSWORD
+host = ls.HOST
 
 def mkdir_sure(filename):
     folder=os.path.dirname(filename)
@@ -66,6 +66,7 @@ def dart_html_to_db(fn, last_datetime, con):
     count_str = "".join(count_str.split())
     if not '페이지에오류' in count_str:
         count_str = find_between(count_str, '전체', '건')
+        count_str = count_str.replace(',', '')
         counts = int(count_str)
 
     insert_counts = 0
@@ -112,7 +113,7 @@ if __name__ == "__main__":
     );
     '''
 
-    cnx_str = 'mysql+mysqlconnector://admin:'+pwd+'@localhost/findb'
+    cnx_str = 'mysql+mysqlconnector://admin:'+pwd+'@'+host+'/findb'
     engine = create_engine(cnx_str, echo=False)
     con = engine.connect()
     
@@ -135,11 +136,14 @@ if __name__ == "__main__":
     url_tmpl = 'http://dart.fss.or.kr/dsac001/search.ax?selectDate=%s'
 
     for i in range(delta.days + 1):
-        d = last_datetime + timedelta(days=i)
-        fn = "DART-%s.html" % d.strftime("%Y-%m-%d")
-        wget(url_tmpl % d.strftime('%Y.%m.%d') , fn)
-        n = dart_html_to_db(fn, last_datetime, con)
-        os.remove(fn)
-        print (fn, n)
+        try:
+            d = last_datetime + timedelta(days=i)
+            fn = "DART-%s.html" % d.strftime("%Y-%m-%d")
+            wget(url_tmpl % d.strftime('%Y.%m.%d') , fn)
+            n = dart_html_to_db(fn, last_datetime, con)
+            os.remove(fn)
+            print (fn, n)
+        except Exception as e:
+            print('> Exception:', e.args[0])
     
     con.close()

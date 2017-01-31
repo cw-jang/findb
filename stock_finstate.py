@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
+#!/usr/bin/python3
 # stock_finstate.py
 
 import time
@@ -17,7 +15,7 @@ import localsetting as ls
 # pwd=input('Enter Password for server:')
 # pwd = 'cansentme'
 pwd = ls.PASSWORD
-
+host = ls.HOST
 
 def get_finstate_naver(code, fin_type='4', freq_type='Y'):
     '''
@@ -58,8 +56,9 @@ def get_finstate_naver(code, fin_type='4', freq_type='Y'):
     return df
 
 if __name__ == "__main__":
-    cnx_str = 'mysql+mysqlconnector://admin:'+pwd+'@localhost/findb'
+    cnx_str = 'mysql+mysqlconnector://admin:'+pwd+'@'+host+'/findb'
     engine = create_engine(cnx_str, echo=False)
+    engine.execute("TRUNCATE TABLE stock_finstate;")
 
     df_master = pd.read_sql("SELECT * FROM stock_master", engine)
     for idx, r in df_master.iterrows():

@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#!/usr/bin/python3
 
 # stock_desc.py
 
@@ -18,6 +17,7 @@ import localsetting as ls
 # pwd=input('Enter Password for server:')
 # pwd = 'cansentme'
 pwd = ls.PASSWORD
+host = ls.HOST
 
 
 # sector, wics, name_en
@@ -115,12 +115,12 @@ if __name__ == "__main__":
     );
     '''
 
-    insert_sql = """insert into stock_desc 
+    insert_sql = """replace into stock_desc 
         (`code`, `name`, `homepage`, `phone`, `address`, `market`, `wics`, `name_en`, `desc`, `desc_date`) 
         values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
     """
 
-    cnx_str = 'mysql+mysqlconnector://admin:'+pwd+'@localhost/findb'
+    cnx_str = 'mysql+mysqlconnector://admin:'+pwd+'@'+host+'/findb'
     engine = create_engine(cnx_str, echo=False)
 
     # create table if not exists
@@ -131,6 +131,7 @@ if __name__ == "__main__":
         homepage, phone, address = get_naver_addres(r['code'])
         market, wics, name_en = get_naver_sector(r['code'])
         desc, desc_date = get_naver_desc(r['code'])
-        engine.execute(insert_sql, (r['code'], r['name'], homepage, phone, address, market, wics, name_en, desc, desc_date) )
+        engine.execute(insert_sql, 
+            (r['code'], r['name'], homepage, phone, address, market, wics, name_en, desc, desc_date) )
         print(r['code'], r['name'])
     

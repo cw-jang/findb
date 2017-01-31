@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
+#!/usr/bin/python3
 # stock_price.py
 
 import pandas as pd
@@ -15,6 +13,7 @@ import localsetting as ls
 # pwd=input('Enter Password for server:')
 # pwd = 'cansentme'
 pwd = ls.PASSWORD
+host = ls.HOST
 
 
 def get_last_page_num(code):
@@ -79,7 +78,7 @@ if __name__ == "__main__":
         insert into stock_price (`date`, `code`, `close`, `change`, `open`, `high`, `low`, `volume`) values (%s,%s,%s,%s,%s,%s,%s,%s)
     """
     
-    cnx_str = 'mysql+mysqlconnector://admin:'+pwd+'@localhost/findb'
+    cnx_str = 'mysql+mysqlconnector://admin:'+pwd+'@'+host+'/findb'
     engine = create_engine(cnx_str, echo=False)
 
     # create table if not exists
